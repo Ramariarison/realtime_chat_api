@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Resources\UserResource;
+use App\Models\User as ModelUser;
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    // Récupérer tous les utilisateurs de la base de données
+    public function getUsers() {
+        
+        $users = ModelUser::where('role', 'normal')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User list retrieved successfully',
+            'data' => UserResource::collection($users)
+        ]);
+    }
+
+    // Stats users
+    public function usersStats() {
+
+        $sumUsers = ModelUser::where('role', 'normal')->count();
+
+        $sumValidatedUsers = ModelUser::where('status', 1)->where('role', 'normal')->count();
+
+        $sumPendingUsers = ModelUser::where('status', 0)->where('role', 'normal')->count();
+
+        return response()->json([
+            'success' => true,
+            'sumUsers' => $sumUsers,
+            'sumValidatedUsers' => $sumValidatedUsers,
+            'sumPendingUsers' => $sumPendingUsers
+        ]);
+    }
+
+    public function addUser(Request $request) {
+
+    }
+}
