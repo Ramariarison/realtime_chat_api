@@ -37,7 +37,26 @@ class UserController extends Controller
         ]);
     }
 
+    // Ajouter un utilisateur (compte)
     public function addUser(Request $request) {
+        //
+    }
+
+    // Valider un compte
+    public function validateUser(ModelUser $user) {
+
+        $user->update([
+            'status' => true
+        ]);
+
+        return response()->json([
+            'message' => 'Account validated successfully'
+        ]);
+
+    }
+
+    // Rejeter une demande de validation
+    public function rejectUser() {
 
     }
 }
