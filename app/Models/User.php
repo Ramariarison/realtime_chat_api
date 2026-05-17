@@ -35,6 +35,13 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    // Récuperer le role de l'utilisateur connecté
+    public function isAdmin() {
+
+        return $this->role === 'admin';
+
+    }
+
     // Messages envoyés
     public function messages()
     {
