@@ -10,6 +10,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:api', 'admin'])->group(function(){
     Route::post('/admin/users', [UserController::class, 'getUsers']);
     Route::post('/admin/stats', [UserController::class, 'usersStats']);
+    Route::post('/admin/users/{user}/validate', [UserController::class, 'validateUser']);
 });
 
 Route::middleware('auth:api')->group(function(){
