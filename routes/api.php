@@ -11,6 +11,7 @@ Route::middleware(['auth:api', 'admin'])->group(function(){
     Route::post('/admin/users', [UserController::class, 'getUsers']);
     Route::post('/admin/stats', [UserController::class, 'usersStats']);
     Route::post('/admin/users/{user}/validate', [UserController::class, 'validateUser']);
+    Route::delete('/admin/users/{user}/delete', [UserController::class, 'removeUser']);
 });
 
 Route::middleware('auth:api')->group(function(){

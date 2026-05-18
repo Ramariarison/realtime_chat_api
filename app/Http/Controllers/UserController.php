@@ -56,7 +56,13 @@ class UserController extends Controller
     }
 
     // Rejeter une demande de validation
-    public function rejectUser() {
+    public function removeUser(ModelUser $user) {
+
+        $user->delete();
+        
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
 
     }
 }
