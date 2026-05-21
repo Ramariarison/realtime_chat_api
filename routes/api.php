@@ -11,9 +11,11 @@ Route::middleware(['auth:api', 'admin'])->group(function(){
     Route::post('/admin/users', [UserController::class, 'getUsers']);
     Route::post('/admin/stats', [UserController::class, 'usersStats']);
     Route::post('/admin/users/{user}/validate', [UserController::class, 'validateUser']);
+    Route::delete('/admin/users/{user}/delete', [UserController::class, 'removeUser']);
 });
 
 Route::middleware('auth:api')->group(function(){
     Route::post('/user/user-info', [AuthController::class, 'me']);
+    Route::post('/user/update', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });

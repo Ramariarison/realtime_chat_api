@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\User as ModelUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -56,7 +57,22 @@ class UserController extends Controller
     }
 
     // Rejeter une demande de validation
-    public function rejectUser() {
+    public function removeUser(ModelUser $user) {
+
+        // Supprimer avatar
+        if(
+            $user->avatar &&
+            Storage::disk('public')->exists($user->avatar)
+        ) {
+
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->delete();
+        
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
 
     }
 }
