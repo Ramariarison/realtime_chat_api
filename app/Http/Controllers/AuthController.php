@@ -6,6 +6,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User as ModelsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -83,6 +84,48 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Disconnected successfully !'
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'avatar' => 'nullable|image|max:1024',
+        ]);
+
+        // Vérification mot de passe actuel
+        if($request->current_pass && $request->new_pass) {
+
+            if(!Hash::check($request->current_pass, $user->password)) {
+                return response()->json([
+                    'message' => 'Mot de passe actuel incorrect'
+                ], 422);
+            }
+
+            $user->password = Hash::make($request->new_pass);
+        }
+
+        // Upload avatar
+        if($request->hasFile('avatar')) {
+
+            $path = $request->file('avatar')->store('avatars', 'public');
+
+            $user->avatar = $path;
+        }
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profil mis à jour',
+            'user' => $user
         ]);
     }
 }

@@ -16,5 +16,6 @@ Route::middleware(['auth:api', 'admin'])->group(function(){
 
 Route::middleware('auth:api')->group(function(){
     Route::post('/user/user-info', [AuthController::class, 'me']);
+    Route::post('/user/update', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
