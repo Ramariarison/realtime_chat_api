@@ -34,17 +34,6 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // Utilisateur connecté
-    public function me() {
-
-        $user = Auth::user();
-
-        return response()->json([
-            'user_info' => $user,
-        ]);
-
-    }
-
     public function login(Request $request)
     {
         // Validation de données
