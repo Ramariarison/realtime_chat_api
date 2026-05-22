@@ -49,7 +49,7 @@ class AuthController extends Controller
         if(! $token = Auth::attempt($credentials)){
             return response()->json([
                 'message' => 'Please verify your credentials !'
-            ]);
+            ], 401);
         };
 
         // Récupération de l'utilisateur
