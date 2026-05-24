@@ -43,6 +43,43 @@ class UserController extends Controller
         //
     }
 
+    public function updateUser(Request $request, ModelUser $user)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
+
+        // Avatar
+        if ($request->hasFile('avatar')) {
+
+            // Supprimer ancien avatar
+            if (
+                $user->avatar &&
+                Storage::disk('public')->exists($user->avatar)
+            ) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            // Stocker nouveau avatar
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+
+            $user->avatar = $avatarPath;
+        }
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully',
+            'data' => new UserResource($user)
+        ]);
+    }
+
     // Valider un compte
     public function validateUser(ModelUser $user) {
 
