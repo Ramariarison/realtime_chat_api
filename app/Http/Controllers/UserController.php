@@ -56,6 +56,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'role' => 'normal',
             'avatar' => $avatarPath,
+            'status' => (int) $request->status
         ]);
 
         return response()->json([
@@ -91,6 +92,7 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->status = (int) $request->status;
 
         $user->save();
 
