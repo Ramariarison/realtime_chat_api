@@ -39,8 +39,29 @@ class UserController extends Controller
     }
 
     // Ajouter un utilisateur (compte)
-    public function addUser(Request $request) {
-        //
+    public function addUser(Request $request)
+    {
+        $avatarPath = null;
+
+        if ($request->hasFile('avatar')) {
+
+            $avatarPath = $request
+                ->file('avatar')
+                ->store('avatars', 'public');
+        }
+
+        $user = ModelUser::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => 'normal',
+            'avatar' => $avatarPath,
+        ]);
+
+        return response()->json([
+            'message' => 'Utilisateur créé avec succès',
+            'user' => $user
+        ], 201);
     }
 
     public function updateUser(Request $request, ModelUser $user)

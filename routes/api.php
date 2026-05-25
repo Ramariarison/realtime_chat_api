@@ -13,6 +13,7 @@ Route::middleware(['auth:api', 'admin'])->group(function(){
     Route::post('/admin/users/{user}/validate', [UserController::class, 'validateUser']);
     Route::delete('/admin/users/{user}/delete', [UserController::class, 'removeUser']);
     Route::post('/admin/users/{user}/update-user', [UserController::class, 'updateUser']);
+    Route::post('/admin/users/add', [UserController::class, 'addUser']);
 });
 
 Route::middleware('auth:api')->group(function(){
