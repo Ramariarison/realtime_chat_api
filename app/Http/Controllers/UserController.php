@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\User as ModelUser;
+use App\Models\Friend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -134,5 +135,56 @@ class UserController extends Controller
             'message' => 'User deleted successfully'
         ]);
 
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->query('query');
+
+        $currentUser = auth()->user();
+
+        $users = ModelUser::query()
+            ->where('id', '!=', $currentUser->id)
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                ->orWhere('email', 'like', "%{$query}%");
+            })
+            ->get();
+
+        $results = $users->map(function ($user) use ($currentUser) {
+
+            $friendship = Friend::where(function ($q) use ($currentUser, $user) {
+                    $q->where('user_id', $currentUser->id)
+                    ->where('friend_id', $user->id);
+                })
+                ->orWhere(function ($q) use ($currentUser, $user) {
+                    $q->where('user_id', $user->id)
+                    ->where('friend_id', $currentUser->id);
+                })
+                ->first();
+
+            $status = 'none';
+
+            if ($friendship) {
+
+                if ($friendship->status === 'accepted') {
+                    $status = 'friend';
+                }
+
+                if ($friendship->status === 'pending') {
+                    $status = 'pending';
+                }
+            }
+
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar,
+                'friendship_status' => $status,
+            ];
+        });
+
+        return response()->json($results);
     }
 }
