@@ -44,14 +44,39 @@ class FriendController extends Controller
         );
     }
 
+    public function friends()
+    {
+        $friends = Friend::with('friend')
+            ->where('user_id', auth()->id())
+            ->where('status', 'accepted')
+            ->get();
+
+        return response()->json(
+            $friends->map(function ($friend) {
+                return [
+                    'id' => $friend->friend->id,
+                    'name' => $friend->friend->name,
+                    'email' => $friend->friend->email,
+                    'avatar' => $friend->friend->avatar,
+                ];
+            })
+        );
+    }    
+
     public function accept(ModelUser $friend)
     {
         $request = Friend::where('user_id', $friend->id)
             ->where('friend_id', auth()->id())
-            ->where('status', 'pending')
             ->firstOrFail();
 
         $request->update([
+            'status' => 'accepted'
+        ]);
+
+        Friend::firstOrCreate([
+            'user_id' => auth()->id(),
+            'friend_id' => $friend->id
+        ], [
             'status' => 'accepted'
         ]);
 

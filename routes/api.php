@@ -26,4 +26,5 @@ Route::middleware('auth:api')->group(function(){
     Route::get('/friends/requests', [FriendController::class, 'requests']);
     Route::post('/friends/{friend}/accept', [FriendController::class, 'accept']);
     Route::delete('/friends/{friend}/decline', [FriendController::class, 'decline']);
+    Route::get('/friends', [FriendController::class, 'friends']);
 });
