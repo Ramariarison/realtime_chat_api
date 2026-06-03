@@ -23,4 +23,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/users/search', [UserController::class, 'search']);
     Route::post('/friends/invite/{user}', [FriendController::class, 'invite']);
+    Route::get('/friends/requests', [FriendController::class, 'requests']);
+    Route::post('/friends/{friend}/accept', [FriendController::class, 'accept']);
+    Route::delete('/friends/{friend}/decline', [FriendController::class, 'decline']);
 });

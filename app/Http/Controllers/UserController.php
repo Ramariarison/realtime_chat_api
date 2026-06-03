@@ -145,6 +145,8 @@ class UserController extends Controller
 
         $users = ModelUser::query()
             ->where('id', '!=', $currentUser->id)
+            ->where('status', '!=', 0)
+            ->where('role', '!=', 'admin')
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
                 ->orWhere('email', 'like', "%{$query}%");
