@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\MessageController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -27,4 +29,8 @@ Route::middleware('auth:api')->group(function(){
     Route::post('/friends/{friend}/accept', [FriendController::class, 'accept']);
     Route::delete('/friends/{friend}/decline', [FriendController::class, 'decline']);
     Route::get('/friends', [FriendController::class, 'friends']);
+    Route::post('/conversations/start/{user}', [ConversationController::class, 'start']);
+    Route::get('/conversations', [ConversationController::class, 'index']);
+    Route::get('/conversations/{conversation}/messages', [MessageController::class, 'index']);
+    Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store']);
 });
